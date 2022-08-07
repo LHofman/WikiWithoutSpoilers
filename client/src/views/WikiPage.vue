@@ -19,7 +19,60 @@
       return {
         title: "Hannibal Lecter",
         intro: "Dr. Hannibal Lecter is the titular main antagonist of the NBC show Hannibal.<br/><br/>Hannibal is a psychiatrist who works with Special Agent Will Graham to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer known as the Chesapeake Ripper, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives.",
-        infoBox: "Hannibal Lecter",
+        infoBox: {
+          title: "Hannibal Lecter",
+          imageUrl: "https://static.wikia.nocookie.net/hannibal/images/1/16/HBL_S2_Lecter_Portrait4.jpg"/*/revision/latest/scale-to-width-down/350?cb=20200703051856"*/,
+          sections: [
+            {
+              title: "Information",
+              information: [
+                {
+                  title: "Age",
+                  value: 49,
+                },
+                {
+                  title: "Alias(es)",
+                  value: [
+                    "The Chesapeake Ripper",
+                    "The Copycat Killer",
+                    "Il Mostro di Firenze",
+                    "Roman Fell (False Identity)",
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Relations",
+              information: [
+                {
+                  title: "Relatives",
+                  value: [
+                    "Mischa Lecter (Sister)",
+                    "Lady Murasaki (Aunt)",
+                    "Robertus (Uncle)",
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Behind the scenes",
+              information: [
+                {
+                  title: "First appearance",
+                  value: "Apéritif",
+                },
+                {
+                  title: "Last appearance",
+                  value: "The Wrath of the Lamb",
+                },
+                {
+                  title: "Portrayed by",
+                  value: "Mads Mikkelsen",
+                },
+              ],
+            },
+          ],
+        },
         content: [
           {
             title: "History",
@@ -74,7 +127,7 @@
       <TableOfContent id="table-of-contents" :titles="tableOfContentTitles"/>
     </div>
 
-    <InfoBox id="info-box" :text="infoBox"/>
+    <InfoBox id="info-box" :infoBox="infoBox"/>
   </div>
 
   <Content id="content" :content="content" />
@@ -92,7 +145,6 @@
 
   #info-box {
     border: 1px solid black;
-    padding: 10px;
     width: 30%;
   }
 
