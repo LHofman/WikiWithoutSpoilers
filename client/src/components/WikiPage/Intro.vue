@@ -1,11 +1,21 @@
 <script lang="ts">
-  export default {
+  import { defineComponent } from "vue";
+
+  import type { WikiText as WikiTextType } from "@/types/WikiPage";
+  
+  import WikiText from "./WikiText.vue";
+
+  export default defineComponent({
     props: {
-      text: String
-    }
-  }
+      text: {
+        type: Array as () => WikiTextType[],
+        required: true,
+      },
+    },
+    components: { WikiText }
+});
 </script>
 
 <template>
-  <p v-html="text" />
+  <WikiText :text="text" />
 </template>

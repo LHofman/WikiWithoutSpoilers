@@ -1,28 +1,32 @@
 export type Content = {
-  title: String,
-  text?: String,
+  title: WikiText,
+  text?: WikiText[],
   subContent?: Content[],
 };
 
 export type InfoBox = {
   title: String,
   imageUrl: String,
-  sections: [
-    {
-      title: String,
-      information: [
-        {
-          title: String,
-          value: InfoBoxInformationValue | InfoBoxInformationValue[],
-        }
-      ]
-    }
-  ]
+  sections: InfoBoxSection[]
 };
-export type InfoBoxInformationValue = String | Number;
+type InfoBoxSection = {
+  title: String,
+  information: InfoBoxSectionInfo[]
+}
+type InfoBoxSectionInfo = {
+  title: String,
+  value: WikiText[] | WikiText[][],
+}
 
-export type TOCTitle = TOCTitleObject | String;
-type TOCTitleObject = {
-  title: String;
+export type TOCTitle = {
+  title: WikiText;
   subTitles?: TOCTitle[];
+}
+
+export type WikiText = {
+  text: String;
+  season?: Number;
+  episode?: Number;
+  alternateText?: String;
+  innerText?: WikiText[];
 }

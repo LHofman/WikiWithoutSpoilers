@@ -1,11 +1,17 @@
 <script lang="ts">
   import type { InfoBox } from "@/types/WikiPage";
+  
+  import WikiText from "./WikiText.vue";
 
   export default {
     props: {
-      infoBox: Object as () => InfoBox
-    }
-  }
+      infoBox: {
+        type: Object as () => InfoBox,
+        required: true,
+      },
+    },
+    components: { WikiText }
+}
 </script>
 
 <template>
@@ -21,9 +27,9 @@
         </div>
         <div v-for="sectionInfo in section.information" class="infobox-section-information">
           <p class="infobox-section-info-title"><strong>{{ sectionInfo.title }}</strong></p>
-          <p v-if="!Array.isArray(sectionInfo.value)">{{ sectionInfo.value }}</p>
+          <WikiText v-if="!Array.isArray(sectionInfo.value[0])" :text="sectionInfo.value" />
           <div v-else class="infobox-section-info-value-list">
-            <p v-for="value in sectionInfo.value" class="infobox-section-info-value-item">{{ value }}</p>
+            <WikiText v-for="value in sectionInfo.value" class="infobox-section-info-value-item" :text="value" />
           </div>
         </div>
       </div>

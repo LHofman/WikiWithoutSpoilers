@@ -1,0 +1,1 @@
+export const WIKITEXT_INNER_TEXT_SUBSTRING: string = '[innerText]';

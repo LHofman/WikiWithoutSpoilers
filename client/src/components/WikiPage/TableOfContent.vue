@@ -1,11 +1,26 @@
 <script lang="ts">
-  import type { TOCTitle } from "@/types/WikiPage";
+  import { mapWritableState } from "pinia";
   import { defineComponent } from "vue";
+  
+  import { useProgressStore } from "@/stores/progress";
+  import type { TOCTitle, WikiText } from "@/types/WikiPage";
+  import { canShow } from "@/utils/wikiText";
 
   export default defineComponent({
     props: {
-      titles: Array as () => TOCTitle[],
+      titles: {
+        type: Array as () => TOCTitle[],
+        required: true,
+      },
       parentNumber: String,
+    },
+    computed: {
+      ...mapWritableState(useProgressStore, ["season", "episode"]),
+      filteredTitles() {
+        return this.titles.filter(
+          (title: TOCTitle) => canShow(this.season, this.episode, title.title)
+        );
+      },
     },
     methods: {
       getNumber(idx: number): String {
@@ -20,13 +35,10 @@
 
 <template>
   <ul>
-    <li v-for="(title, idx) in titles">
-      <span v-if="title instanceof String">{{ getTitle(idx, title) }}</span>
-      <span v-else>
-        {{ getTitle(idx, title.title) }}
-        <span v-if="title.subTitles?.length">
-          <TableOfContent class="subTitles" :titles="title.subTitles" :parentNumber="getNumber(idx)" />
-        </span>
+    <li v-for="(title, idx) in filteredTitles">
+      {{ getTitle(idx, title.title.text) }}
+      <span v-if="title.subTitles?.length">
+        <TableOfContent class="subTitles" :titles="title.subTitles" :parentNumber="getNumber(idx)" />
       </span>
     </li>
   </ul>
