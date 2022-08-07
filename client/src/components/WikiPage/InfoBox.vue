@@ -74,4 +74,8 @@
     margin-top: 0;
     margin-bottom: 0;
   }
+
+  #infobox-container p {
+    font-size: 14px;
+  }
 </style>
