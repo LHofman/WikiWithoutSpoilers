@@ -1,50 +1,47 @@
 <script lang="ts">
-  import { mapWritableState } from "pinia";
   import { defineComponent } from "vue";
 
-  import { useProgressStore } from "@/stores/progress";
-  import type { Content } from "@/types/WikiPage";
-  import { canShow } from "@/utils/wikiText";
+  import type { Content } from "@wws/shared/src/types/WikiPageTypes";
+  import { getSectionId } from "@/utils/tableOfContents";
+  import { filterWikiTextList } from "@/utils/wikiText";
   
   import WikiText from "./WikiText.vue";
 
   export default defineComponent({
     props: {
-        content: {
-            type: Array as () => Content[],
-            required: true,
-        },
-        headerTagNumber: {
-            type: Number,
-            default: 2,
-        },
+      content: {
+        type: Array as () => Content[],
+        required: true,
+      },
+      headerTagNumber: {
+        type: Number,
+        default: 2,
+      },
+    },
+    components: {
+      WikiText,
     },
     computed: {
-        ...mapWritableState(useProgressStore, ["season", "episode"]),
-        sections(): Content[] {
-            return this.content.filter((content: Content) => canShow(this.season, this.episode, content.title));
-        },
-        headerTag(): String {
-            return `h${this.headerTagNumber}`;
-        },
-        isMainHeader(): Boolean {
-            return this.headerTagNumber === 2;
-        },
-        nextHeaderTagNumber(): Number {
-            return this.headerTagNumber + 1;
-        },
+      filteredSections(): Content[] {
+        return filterWikiTextList(this.content);
+      },
+      isMainHeader(): Boolean {
+        return this.headerTagNumber === 2;
+      },
     },
-    components: { WikiText }
-});
+    methods: {
+      getSectionId,
+    },
+  });
 </script>
 
 <template>
   <div>
-    <div :class="{ mainHeader: isMainHeader, subHeader: !isMainHeader }" v-for="section in sections">
-      <component :is="headerTag">{{ section.title.text }}</component>
+    <div :class="{ mainHeader: isMainHeader, subHeader: !isMainHeader }" v-for="section in filteredSections">
+      <WikiText :id="getSectionId(section)" :component="'h' + headerTagNumber" :text="section.title" />
       <hr v-if="isMainHeader"/>
       <WikiText v-if="section.text" :text="section.text" />
-      <Content v-if="section.subContent" :content="section.subContent" :headerTagNumber="nextHeaderTagNumber" />
+      <Content v-if="section.subContent" :content="section.subContent" :headerTagNumber="headerTagNumber + 1" />
     </div>
   </div>
 </template>

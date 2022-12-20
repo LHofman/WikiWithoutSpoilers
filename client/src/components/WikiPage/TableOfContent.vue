@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { mapWritableState } from "pinia";
   import { defineComponent } from "vue";
   
-  import { useProgressStore } from "@/stores/progress";
-  import type { TOCTitle, WikiText } from "@/types/WikiPage";
-  import { canShow } from "@/utils/wikiText";
+  import type { TOCTitle } from "@wws/shared/src/types/WikiPageTypes";
+  import { getSectionId } from "@/utils/tableOfContents";
+  import {  filterWikiTextList } from "@/utils/wikiText";
+  
+  import WikiText from "./WikiText.vue";
 
   export default defineComponent({
     props: {
@@ -14,29 +15,29 @@
       },
       parentNumber: String,
     },
+    components: {
+      WikiText,
+    },
     computed: {
-      ...mapWritableState(useProgressStore, ["season", "episode"]),
-      filteredTitles() {
-        return this.titles.filter(
-          (title: TOCTitle) => canShow(this.season, this.episode, title.title)
-        );
+      filteredTitles(): TOCTitle[] {
+        return filterWikiTextList(this.titles);
       },
     },
     methods: {
-      getNumber(idx: number): String {
+      getNumber(idx: number): string {
         return `${ this.parentNumber ? `${this.parentNumber}.` : ''}${ idx + 1 }`;
       },
-      getTitle(idx: number, title: String) {
-        return `${this.getNumber(idx)}. ${title}`;
-      }
+      getSectionId
     },
-  })
+  });
 </script>
 
 <template>
   <ul>
     <li v-for="(title, idx) in filteredTitles">
-      {{ getTitle(idx, title.title.text) }}
+      <a :href="'#' + getSectionId(title)">
+        <WikiText :prefix="getNumber(idx) + '. '" :text="title.title" />
+      </a>
       <span v-if="title.subTitles?.length">
         <TableOfContent class="subTitles" :titles="title.subTitles" :parentNumber="getNumber(idx)" />
       </span>

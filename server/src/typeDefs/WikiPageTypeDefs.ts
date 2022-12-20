@@ -43,4 +43,8 @@ export default gql`
   type Query {
     wikiPage(titleId: String!): WikiPage,
   }
+
+  schema {
+    query: Query
+  }
 `;

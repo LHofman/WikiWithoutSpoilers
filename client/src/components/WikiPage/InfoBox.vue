@@ -1,33 +1,50 @@
 <script lang="ts">
-  import type { InfoBox } from "@/types/WikiPage";
+  import { defineComponent } from "vue";
+
+  import type { InfoBox, InfoBoxSection, InfoBoxSectionInfo } from "@wws/shared/src/types/WikiPageTypes";
+  import { filterWikiTextList } from "@/utils/wikiText";
   
   import WikiText from "./WikiText.vue";
 
-  export default {
+  export default defineComponent({
     props: {
       infoBox: {
         type: Object as () => InfoBox,
         required: true,
       },
     },
-    components: { WikiText }
-}
+    components: {
+      WikiText,
+    },
+    computed: {
+      filteredSections(): InfoBoxSection[] {
+        return filterWikiTextList(this.infoBox.sections) as InfoBoxSection[];
+      },
+    },
+    methods: {
+      getFilteredSectionInfo(section: InfoBoxSection): InfoBoxSectionInfo[] {
+        return filterWikiTextList(section.information) as InfoBoxSectionInfo[];
+      },
+    },
+  });
 </script>
 
 <template>
   <div>
     <div id="infobox-container">
       <div id="infobox-title" class="container-center">
-        <h2>{{ infoBox.title }}</h2>
+        <WikiText :component="'h2'" :text="infoBox.title" />
       </div>
       <img id="infobox-image" :src="infoBox.imageUrl" />
-      <div v-for="section in infoBox.sections">
+      <div v-for="section in filteredSections">
         <div class="infobox-section-title container-center">
-          <h3>{{ section.title }}</h3>
+          <WikiText :component="'h3'" :text="section.title" />
         </div>
-        <div v-for="sectionInfo in section.information" class="infobox-section-information">
-          <p class="infobox-section-info-title"><strong>{{ sectionInfo.title }}</strong></p>
-          <WikiText v-if="!Array.isArray(sectionInfo.value[0])" :text="sectionInfo.value" />
+        <div v-for="sectionInfo in getFilteredSectionInfo(section)" class="infobox-section-information">
+          <p class="infobox-section-info-title">
+            <WikiText :component="'strong'" :text="sectionInfo.title" />
+          </p>
+          <WikiText v-if="sectionInfo.value.length === 1" :text="sectionInfo.value[0]" />
           <div v-else class="infobox-section-info-value-list">
             <WikiText v-for="value in sectionInfo.value" class="infobox-section-info-value-item" :text="value" />
           </div>

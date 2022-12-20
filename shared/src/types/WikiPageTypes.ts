@@ -1,41 +1,41 @@
 export type Content = {
-  title: WikiText,
-  text?: WikiText,
+  title: WikiText[],
+  text?: WikiText[],
   subContent?: Content[],
 };
 
 export type InfoBox = {
-  title: WikiText,
-  imageUrl: String,
+  title: WikiText[],
+  imageUrl: string,
   sections: InfoBoxSection[]
 };
-type InfoBoxSection = {
-  title: WikiText,
+export type InfoBoxSection = {
+  title: WikiText[],
   information: InfoBoxSectionInfo[]
 };
-type InfoBoxSectionInfo = {
-  title: WikiText,
-  value: WikiText[],
+export type InfoBoxSectionInfo = {
+  title: WikiText[],
+  value: WikiText[][],
 };
 
-export type TOCTitle = {
-  title: WikiText;
+  export type TOCTitle = {
+  title: WikiText[];
   subTitles?: TOCTitle[];
 };
 
 export type WikiText = {
-  text: String;
+  text: string;
   season?: Number;
   episode?: Number;
-  alternateText?: String;
-  innerText?: WikiText;
-}[];
+  alternateText?: string;
+  innerText?: WikiText[];
+};
 
 export type WikiPage = {
   titleId: string,
   type: string,
-  title: WikiText,
-  intro: WikiText,
+  title: WikiText[],
+  intro: WikiText[],
   infoBox: InfoBox,
   content: Content[]
 };
