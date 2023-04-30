@@ -1,8 +1,12 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
+import BootstrapVue3 from 'bootstrap-vue-3'
 import { createPinia } from "pinia";
 import PiniaPluginPersistedState from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
 import { createApolloProvider } from '@vue/apollo-option'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 
 import App from "./App.vue";
 
@@ -24,5 +28,7 @@ const apolloProvider = createApolloProvider({
   }),
 });
 app.use(apolloProvider);
+
+app.use(BootstrapVue3);
 
 app.mount("#app");

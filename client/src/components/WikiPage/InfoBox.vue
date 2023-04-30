@@ -86,6 +86,8 @@
     margin-left: 5px;
     margin-right: 10px;
     width: 30%;
+    padding-top: 5px;
+    padding-left: 5px;
   }
 
   .infobox-section-info-value-list {

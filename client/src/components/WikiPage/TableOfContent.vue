@@ -36,7 +36,7 @@
   <ul>
     <li v-for="(title, idx) in filteredTitles">
       <a :href="'#' + getSectionId(title)">
-        <WikiText :prefix="getNumber(idx) + '. '" :text="title.title" />
+        <WikiText :prefix="getNumber(idx) + '. '" :text="title.title" :canEdit="false" />
       </a>
       <span v-if="title.subTitles?.length">
         <TableOfContent class="subTitles" :titles="title.subTitles" :parentNumber="getNumber(idx)" />

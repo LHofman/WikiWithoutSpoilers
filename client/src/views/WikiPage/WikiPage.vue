@@ -1,21 +1,23 @@
 <script lang="ts">
+  import { mapWritableState } from "pinia";
   import { defineComponent } from "vue";
 
   import type { Content as ContentType, TOCTitle, WikiPage as WikiPageType } from "@wws/shared/src/types/WikiPageTypes";
+  import { useGeneralStore } from "@/stores/general";
 
-  import { wikiPage } from '../api/queries/wikiPage';
+  import { wikiPage } from '../../api/queries/wikiPage';
 
-  import Content from "../components/WikiPage/Content.vue";
-  import InfoBox from "../components/WikiPage/InfoBox.vue";
-  import TableOfContent from "../components/WikiPage/TableOfContent.vue";
-  import WikiText from "../components/WikiPage/WikiText.vue";
+  import Content from "../../components/WikiPage/Content.vue";
+  import InfoBox from "../../components/WikiPage/InfoBox.vue";
+  import TableOfContent from "../../components/WikiPage/TableOfContent.vue";
+  import WikiText from "../../components/WikiPage/WikiText.vue";
 
   export default defineComponent({
     apollo: {
       wikiPage: {
         query: wikiPage,
         variables: {
-          titleId: "hannibal_lector"
+          titleId: "hannibal_lector",
         },
       },
     },
@@ -27,11 +29,11 @@
     },
     data() {
       return {
-        hello: 'hi',
         wikiPage: undefined as WikiPageType | undefined,
       };
     },
     computed: {
+      ...mapWritableState(useGeneralStore, ['isEditing']),
       tableOfContentTitles(): TOCTitle[] {
         const contentToTOCTitle = (content: ContentType ): TOCTitle => {
           return {
@@ -48,7 +50,10 @@
 
 <template>
   <div v-if="wikiPage">
-    <WikiText :component="'h1'" :text="wikiPage.title" />
+    <div id="title-bar">
+      <WikiText id="title" :component="'h1'" :text="wikiPage.title" />
+      <b-button variant="primary" @click="isEditing = !isEditing">Edit</b-button>
+    </div>
 
     <div id="general-info">
       <div id="intro-with-toc">
@@ -89,5 +94,12 @@
     padding: 10px;
     margin-top: 50px;
     margin-bottom: 50px;
+  }
+
+  #title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 65%;
   }
 </style>
